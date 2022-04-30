@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"log"
-	"microservice_go/handlers"
+	"microservice_go/product-api/handlers"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,12 +12,10 @@ import (
 
 func main() {
 	l := log.New(os.Stdout,"product-api", log.LstdFlags)
-	hh := handlers.NewHello(l)
-	gh := handlers.NewGoodbye(l)
+	ph := handlers.NewProducts(l)
 
 	sm := http.NewServeMux()
-	sm.Handle("/", hh)
-	sm.Handle("/goodbye", gh)
+	sm.Handle("/", ph)
 	s := &http.Server{
 		Addr: ":9090",
 		Handler: sm,
@@ -30,6 +28,7 @@ func main() {
 		if err != nil  {
 			l.Fatal(err)
 		}
+		os.Exit(1)
 	}()
 	sigChan := make(chan os.Signal)
 	signal.Notify(sigChan, os.Interrupt)
